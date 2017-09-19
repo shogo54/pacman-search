@@ -665,6 +665,30 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
 
     return games
 
+
+def main(argstring):
+    """
+    For launching the program with command line arguments, even though we aren't running
+    from the command line. Use like this, by plugging in anything from commands.txt:
+
+    pacman.main('python pacman.py -l mediumMaze -p SearchAgent')
+
+    Or you can run it like this:
+
+    pacman.main('-l mediumMaze -p SearchAgent')
+    """
+    for s in ['python ', 'pacman.py ']:
+        if argstring.startswith(s):
+            argstring = argstring[len(s):]
+    #argstring = argstring.lstrip('python ')
+    #argstring = argstring.lstrip('pacman.py ')
+
+    args = readCommand(argstring.split())
+    runGames(**args)
+
+    pass
+
+
 if __name__ == '__main__':
     """
     The main function called when pacman.py is run
