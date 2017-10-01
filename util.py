@@ -188,6 +188,10 @@ class PriorityQueue:
         (_, _, item) = heapq.heappop(self.heap)
         return item
 
+    def popPrioNItem(self):
+        (priority, _, item) = heapq.heappop(self.heap)
+        return item, priority
+
     def isEmpty(self):
         return len(self.heap) == 0
 
