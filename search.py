@@ -17,7 +17,9 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
-import util
+from util import Stack, Queue
+from util import PriorityQueue as PQ
+
 
 class SearchProblem:
     """
@@ -70,7 +72,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -86,18 +89,100 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # set up
+    to_visit = Stack()  # stack or Queue of nodes to visit
+    visited = set()  # set of nodes visited
+    paths = {}  # dict from dot to paths
+    goal = ()  # tuple of goal state
+
+    # put first node
+    start = problem.getStartState
+    to_visit.push(start)
+    paths[start] = []
+
+    # process for each
+    while not to_visit.isEmpty():
+        current = to_visit.pop()
+        if problem.isGoalState(current):
+            goal = current
+            break
+        for (nextloc, dir, cost) in problem.getSuccessors(current):
+            if not nextloc in visited:
+                to_visit.push(nextloc)
+                paths[nextloc] = list(paths[current])
+                paths[nextloc].append(dir)
+        visited.add(current)
+
+    return paths[goal]
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # set up
+    to_visit = Queue()  # stack or Queue of nodes to visit
+    visited = set()  # set of nodes visited
+    paths = {}  # dict from dot to paths
+    goal = ()  # tuple of goal state
+
+    # put first node
+    start = problem.getStartState
+    to_visit.push(start)
+    paths[start] = []
+
+    # process for each
+    while not to_visit.isEmpty():
+        current = to_visit.pop()
+        print current
+        if problem.isGoalState(current):
+            goal = current
+            break
+        if current in visited:
+            continue
+        for (nextloc, dir, cost) in problem.getSuccessors(current):
+            if not nextloc in visited:
+                to_visit.push(nextloc)
+                if not nextloc in paths:
+                    paths[nextloc] = list(paths[current])
+                    paths[nextloc].append(dir)
+        visited.add(current)
+
+    return paths[goal]
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # set up
+    to_visit = PQ()  # PQ of nodes to visit
+    visited = set()  # set of nodes visited
+    paths = {}  # dict from dot to paths
+    goal = ()  # tuple of goal state
+
+    # put first node
+    start = problem.getStartState
+    to_visit.push(start,0)
+    paths[start] = ([],0)
+
+    # process for each node
+    while not to_visit.isEmpty():
+        current, way = to_visit.popPrioNItem()
+
+        if problem.isGoalState(current):
+            goal = current
+            break
+        if current in visited:
+            continue
+        for (nextloc, dir, cost) in problem.getSuccessors(current):
+            if not nextloc in visited:
+                to_visit.push(nextloc, way+cost)
+                if not nextloc in paths or (nextloc in paths and way+cost < paths[nextloc][1]):
+                    paths[nextloc] = (list(paths[current][0]), paths[current][1] + cost)
+                    paths[nextloc][0].append(dir)
+        visited.add(current)
+
+    return paths[goal][0]
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -106,10 +191,39 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # set up
+    to_visit = PQ()  # PQ of nodes to visit
+    visited = set()  # set of nodes visited
+    paths = {}  # dict from dot to paths
+    goal = ()  # tuple of goal state
+
+    # put first node
+    start = problem.getStartState
+    to_visit.push(start, 0 + heuristic(start, problem))     # put first node and cost (0) + heuristic
+    paths[start] = ([], 0)       # path does not contain heuristic
+
+    # process for each node
+    while not to_visit.isEmpty():
+        current, way = to_visit.popPrioNItem()
+        way -= heuristic(current,problem)       # way from PQ includes heuristic so reduce it
+        if problem.isGoalState(current):
+            goal = current
+            break
+        if current in visited:
+            continue
+        for (nextloc, dir, cost) in problem.getSuccessors(current):
+            if not nextloc in visited:
+                to_visit.push(nextloc,  way + cost + heuristic(nextloc, problem))
+                if not nextloc in paths or (nextloc in paths and way + cost < paths[nextloc][1]):
+                    paths[nextloc] = (list(paths[current][0]), paths[current][1] + cost)
+                    paths[nextloc][0].append(dir)
+        visited.add(current)
+
+    return paths[goal][0]
 
 
 # Abbreviations
