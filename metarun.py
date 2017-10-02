@@ -33,6 +33,10 @@ You should comment out all lines in the file except one!
 # corner problem with aster
 #pacman.main('python pacman.py -l mediumCorners -p AStarCornersAgent -z 0.5')
 
+# all food problem with ucs
+#pacman.main('python pacman.py -l trickySearch -p SearchAgent -a fn=ucs,prob=FoodSearchProblem')
+
 # all food problem with aster
 #pacman.main('python pacman.py -l testSearch -p AStarFoodSearchAgent')
-pacman.main('python pacman.py -l trickySearch -p AStarFoodSearchAgent')
+#pacman.main('python pacman.py -l trickySearch -p AStarFoodSearchAgent')
+

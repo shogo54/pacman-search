@@ -133,7 +133,6 @@ def breadthFirstSearch(problem):
     # process for each
     while not to_visit.isEmpty():
         current = to_visit.pop()
-        print current
         if problem.isGoalState(current):
             goal = current
             break

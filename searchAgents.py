@@ -305,7 +305,6 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        print self.startState
         return self.checkConner(self.startState)
 
     def isGoalState(self, state):
@@ -339,7 +338,6 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
             "*** YOUR CODE HERE ***"
-            #'''
             x, y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
@@ -348,7 +346,6 @@ class CornersProblem(search.SearchProblem):
                 nextState = self.checkConner((nextPlace, state[1], state[2], state[3], state[4]))
                 cost = 1
                 successors.append((nextState, action, cost))
-            #'''
 
         return successors
 
@@ -383,8 +380,6 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    #'''
-    print state
     xy1 = state[0]
     minDis = 999999
     for i in range(len(corners)):
@@ -395,10 +390,7 @@ def cornersHeuristic(state, problem):
                 minDis = distance
     if minDis == 999999:
         minDis = 0
-    print minDis
-    return minDis  # Default to trivial solution
-    #'''
-    #return 10
+    return minDis
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -493,7 +485,29 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
 
-    return 0
+    eachManhattans = {} # foodPosition => manhattan distance from position to foodPosition
+    eachOthers = {} # foodPosition => hash {other position => manhattan distance from foodPosition to other position}
+    sumManhattans = {} # foodPosition => manhattan distance from position to foodPosition + from foodPosition to the other
+    for xy1 in foodGrid.asList(): # xy1 is foodPosition
+        eachManhattans[xy1] = abs(xy1[0]-position[0]) + abs(xy1[1] - position[1])
+        currToFood = abs(xy1[0]-position[0]) + abs(xy1[1] - position[1])
+        maxDis = 0
+        for xy2 in foodGrid.asList():
+            if xy1==xy2:
+                continue
+            foodToOther = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+            if foodToOther > maxDis:
+                maxDis = foodToOther
+        sumManhattans[xy1] = currToFood + maxDis
+
+    minHeu = 999999
+    for value in sumManhattans.values():
+        if value < minHeu:
+            minHeu = value
+    if minHeu == 999999:
+        minHeu = 0
+
+    return minHeu
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
