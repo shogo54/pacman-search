@@ -97,7 +97,7 @@ def depthFirstSearch(problem):
     goal = ()  # tuple of goal state
 
     # put first node
-    start = problem.getStartState
+    start = problem.getStartState()
     to_visit.push(start)
     paths[start] = []
 
@@ -126,7 +126,7 @@ def breadthFirstSearch(problem):
     goal = ()  # tuple of goal state
 
     # put first node
-    start = problem.getStartState
+    start = problem.getStartState()
     to_visit.push(start)
     paths[start] = []
 
@@ -160,7 +160,7 @@ def uniformCostSearch(problem):
     goal = ()  # tuple of goal state
 
     # put first node
-    start = problem.getStartState
+    start = problem.getStartState()
     to_visit.push(start,0)
     paths[start] = ([],0)
 
@@ -202,14 +202,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     goal = ()  # tuple of goal state
 
     # put first node
-    start = problem.getStartState
+    start = problem.getStartState()
     to_visit.push(start, 0 + heuristic(start, problem))     # put first node and cost (0) + heuristic
     paths[start] = ([], 0)       # path does not contain heuristic
 
     # process for each node
     while not to_visit.isEmpty():
         current, way = to_visit.popPrioNItem()
-        way -= heuristic(current,problem)       # way from PQ includes heuristic so reduce it
+        way -= heuristic(current, problem)       # way from PQ includes heuristic so reduce it
         if problem.isGoalState(current):
             goal = current
             break

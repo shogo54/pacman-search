@@ -37,7 +37,7 @@ def followAction(state, action, problem):
   return None
 
 def followPath(path, problem):
-  state = problem.getStartState()
+  state = problem.getStartState
   states = [state]
   for action in path:
     state = followAction(state, action, problem)
@@ -45,7 +45,7 @@ def followPath(path, problem):
   return states
 
 def checkSolution(problem, path):
-  state = problem.getStartState()
+  state = problem.getStartState
   for action in path:
     state = followAction(state, action, problem)
   return problem.isGoalState(state)
@@ -479,7 +479,7 @@ class HeuristicTest(testClasses.TestCase):
         gameState.initialize(lay, 0)
         problemClass = getattr(searchAgents, self.searchProblemClassName)
         problem = problemClass(gameState)
-        state = problem.getStartState()
+        state = problem.getStartState
         heuristic = getattr(searchAgents, self.heuristicName)
 
         return problem, state, heuristic
@@ -563,7 +563,7 @@ class HeuristicGrade(testClasses.TestCase):
         gameState.initialize(lay, 0)
         problemClass = getattr(searchAgents, self.searchProblemClassName)
         problem = problemClass(gameState)
-        state = problem.getStartState()
+        state = problem.getStartState
         heuristic = getattr(searchAgents, self.heuristicName)
 
         return problem, state, heuristic
@@ -695,7 +695,7 @@ class CornerHeuristicSanity(testClasses.TestCase):
         lay = layout.Layout([l.strip() for l in self.layout_text.split('\n')])
         game_state.initialize(lay, 0)
         problem = searchAgents.CornersProblem(game_state)
-        start_state = problem.getStartState()
+        start_state = problem.getStartState
         h0 = searchAgents.cornersHeuristic(start_state, problem)
         succs = problem.getSuccessors(start_state)
         # cornerConsistencyA
@@ -775,7 +775,7 @@ class CornerHeuristicPacman(testClasses.TestCase):
         lay = layout.Layout([l.strip() for l in self.layout_text.split('\n')])
         game_state.initialize(lay, 0)
         problem = searchAgents.CornersProblem(game_state)
-        start_state = problem.getStartState()
+        start_state = problem.getStartState
         if searchAgents.cornersHeuristic(start_state, problem) > true_cost:
             grades.addMessage('FAIL: Inadmissible heuristic')
             return False
