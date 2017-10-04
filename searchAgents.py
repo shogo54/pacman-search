@@ -386,8 +386,16 @@ def cornersHeuristic(state, problem):
         if state[i+1] == False:
             xy2 = corners[i]
             distance = abs(xy1[0]-xy2[0]) + abs(xy1[1] - xy2[1])
-            if minDis > distance:
-                minDis = distance
+            farestCornerDis = 0
+            for j in range(len(corners)):
+                if i == j: continue
+                if state[j+1] == False:
+                    xy3 = corners[j]
+                    cornerDis = abs(xy3[0]-xy2[0]) + abs(xy3[1] - xy2[1])
+                    if farestCornerDis < cornerDis:
+                        farestCornerDis = cornerDis
+            if minDis > distance+farestCornerDis:
+                minDis = distance+farestCornerDis
     if minDis == 999999:
         minDis = 0
     return minDis
@@ -485,8 +493,37 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
 
+    #algorithm 2
+    closestFood = []
+    closestDis = 999999
+    for xy in foodGrid.asList():  # xy1 is foodPosition
+        dis = abs(xy[0] - position[0]) + abs(xy[1] - position[1])
+        if closestDis > dis:
+            closestDis = dis
+            closestFood = [xy]
+        elif closestDis == dis:
+            closestFood.append(xy)
+    if closestDis == 999999:
+        closestDis = 0
+
+    minDisOfMax = 999999
+    for xy1 in closestFood:  # xy1 is foodPosition
+        maxDis = 0
+        for xy2 in foodGrid.asList():
+            if xy1 == xy2:
+                continue
+            foodToOther = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+            if foodToOther > maxDis:
+                maxDis = foodToOther
+        if minDisOfMax > maxDis:
+            minDisOfMax = maxDis
+    if minDisOfMax == 999999:
+        minDisOfMax=0
+    return minDisOfMax+closestDis
+
+    '''
+    # algorithm 1
     eachManhattans = {} # foodPosition => manhattan distance from position to foodPosition
-    eachOthers = {} # foodPosition => hash {other position => manhattan distance from foodPosition to other position}
     sumManhattans = {} # foodPosition => manhattan distance from position to foodPosition + from foodPosition to the other
     for xy1 in foodGrid.asList(): # xy1 is foodPosition
         eachManhattans[xy1] = abs(xy1[0]-position[0]) + abs(xy1[1] - position[1])
@@ -508,6 +545,7 @@ def foodHeuristic(state, problem):
         minHeu = 0
 
     return minHeu
+    '''
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -538,7 +576,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.breadthFirstSearch(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -574,7 +612,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return state in self.food.asList()
 
 def mazeDistance(point1, point2, gameState):
     """
