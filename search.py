@@ -110,8 +110,7 @@ def depthFirstSearch(problem):
         for (nextloc, dir, cost) in problem.getSuccessors(current):
             if not nextloc in visited:
                 to_visit.push(nextloc)
-                paths[nextloc] = list(paths[current])
-                paths[nextloc].append(dir)
+                paths[nextloc] = paths[current] + [dir]
         visited.add(current)
 
     return paths[goal]
@@ -142,8 +141,7 @@ def breadthFirstSearch(problem):
             if not nextloc in visited:
                 to_visit.push(nextloc)
                 if not nextloc in paths:
-                    paths[nextloc] = list(paths[current])
-                    paths[nextloc].append(dir)
+                    paths[nextloc] = paths[current] + [dir]
         visited.add(current)
 
     return paths[goal]
@@ -166,7 +164,6 @@ def uniformCostSearch(problem):
     # process for each node
     while not to_visit.isEmpty():
         current, way = to_visit.popPrioNItem()
-
         if problem.isGoalState(current):
             goal = current
             break
@@ -176,8 +173,7 @@ def uniformCostSearch(problem):
             if not nextloc in visited:
                 to_visit.push(nextloc, way+cost)
                 if not nextloc in paths or (nextloc in paths and way+cost < paths[nextloc][1]):
-                    paths[nextloc] = (list(paths[current][0]), paths[current][1] + cost)
-                    paths[nextloc][0].append(dir)
+                    paths[nextloc] = (paths[current][0] + [dir], paths[current][1] + cost)
         visited.add(current)
 
     return paths[goal][0]
@@ -218,8 +214,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             if not nextloc in visited:
                 to_visit.push(nextloc,  way + cost + heuristic(nextloc, problem))
                 if not nextloc in paths or (nextloc in paths and way + cost < paths[nextloc][1]):
-                    paths[nextloc] = (list(paths[current][0]), paths[current][1] + cost)
-                    paths[nextloc][0].append(dir)
+                    paths[nextloc] = (paths[current][0] + [dir], paths[current][1] + cost)
         visited.add(current)
 
     return paths[goal][0]
