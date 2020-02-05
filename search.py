@@ -105,15 +105,14 @@ def depthFirstSearch(problem):
     while not to_visit.isEmpty():
         current = to_visit.pop()
         if problem.isGoalState(current):
-            goal = current
-            break
+            return paths[current]
         for (nextloc, dir, cost) in problem.getSuccessors(current):
             if not nextloc in visited:
                 to_visit.push(nextloc)
                 paths[nextloc] = paths[current] + [dir]
         visited.add(current)
 
-    return paths[goal]
+    return None
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -122,7 +121,6 @@ def breadthFirstSearch(problem):
     to_visit = Queue()  # stack or Queue of nodes to visit
     visited = set()  # set of nodes visited
     paths = {}  # dict from dot to paths
-    goal = ()  # tuple of goal state
 
     # put first node
     start = problem.getStartState()
@@ -133,8 +131,7 @@ def breadthFirstSearch(problem):
     while not to_visit.isEmpty():
         current = to_visit.pop()
         if problem.isGoalState(current):
-            goal = current
-            break
+            return paths[current]
         if current in visited:
             continue
         for (nextloc, dir, cost) in problem.getSuccessors(current):
@@ -144,7 +141,7 @@ def breadthFirstSearch(problem):
                     paths[nextloc] = paths[current] + [dir]
         visited.add(current)
 
-    return paths[goal]
+    return None
 
 
 def uniformCostSearch(problem):
@@ -154,19 +151,17 @@ def uniformCostSearch(problem):
     to_visit = PQ()  # PQ of nodes to visit
     visited = set()  # set of nodes visited
     paths = {}  # dict from dot to paths
-    goal = ()  # tuple of goal state
 
     # put first node
     start = problem.getStartState()
-    to_visit.push(start,0)
-    paths[start] = ([],0)
+    to_visit.push(start, 0)
+    paths[start] = ([], 0)
 
     # process for each node
     while not to_visit.isEmpty():
         current, way = to_visit.popPrioNItem()
         if problem.isGoalState(current):
-            goal = current
-            break
+            return paths[current][0]
         if current in visited:
             continue
         for (nextloc, dir, cost) in problem.getSuccessors(current):
@@ -176,7 +171,7 @@ def uniformCostSearch(problem):
                     paths[nextloc] = (paths[current][0] + [dir], paths[current][1] + cost)
         visited.add(current)
 
-    return paths[goal][0]
+    return None
 
 
 def nullHeuristic(state, problem=None):
@@ -206,8 +201,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         current, way = to_visit.popPrioNItem()
         way -= heuristic(current, problem)       # way from PQ includes heuristic so reduce it
         if problem.isGoalState(current):
-            goal = current
-            break
+            return paths[current][0]
         if current in visited:
             continue
         for (nextloc, dir, cost) in problem.getSuccessors(current):
@@ -217,7 +211,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     paths[nextloc] = (paths[current][0] + [dir], paths[current][1] + cost)
         visited.add(current)
 
-    return paths[goal][0]
+    return None
 
 
 # Abbreviations
