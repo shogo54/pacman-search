@@ -94,7 +94,6 @@ def depthFirstSearch(problem):
     to_visit = Stack()  # stack or Queue of nodes to visit
     visited = set()  # set of nodes visited
     paths = {}  # dict from dot to paths
-    goal = ()  # tuple of goal state
 
     # put first node
     start = problem.getStartState()
@@ -189,7 +188,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     to_visit = PQ()  # PQ of nodes to visit
     visited = set()  # set of nodes visited
     paths = {}  # dict from dot to paths
-    goal = ()  # tuple of goal state
 
     # put first node
     start = problem.getStartState()
