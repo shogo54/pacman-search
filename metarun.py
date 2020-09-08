@@ -38,7 +38,8 @@ You should comment out all lines in the file except one!
 
 # all food problem with aster
 #pacman.main('python pacman.py -l testSearch -p AStarFoodSearchAgent')
-pacman.main('python pacman.py -l trickySearch -p AStarFoodSearchAgent')
+#pacman.main('python pacman.py -l trickySearch -p AStarFoodSearchAgent')
+pacman.main('python pacman.py -l bigSearch -p AStarFoodSearchAgent')
 
 # all food problem with greedy
 #pacman.main('python pacman.py -l bigSearch -p ClosestDotSearchAgent -z .5')
